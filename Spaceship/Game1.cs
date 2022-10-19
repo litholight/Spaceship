@@ -9,6 +9,13 @@ namespace Spaceship
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        Texture2D shipSprite;
+        Texture2D asteroidSprite;
+        Texture2D spaceSprite;
+        SpriteFont gameFont;
+        SpriteFont timerFont;
+
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -18,7 +25,9 @@ namespace Spaceship
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 720;
+            _graphics.ApplyChanges();
 
             base.Initialize();
         }
@@ -27,7 +36,12 @@ namespace Spaceship
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            shipSprite = Content.Load<Texture2D>("ship");
+            asteroidSprite = Content.Load<Texture2D>("asteroid");
+            spaceSprite = Content.Load<Texture2D>("space");
+            
+            gameFont = Content.Load<SpriteFont>("spaceFont");
+            timerFont = Content.Load<SpriteFont>("timerFont");
         }
 
         protected override void Update(GameTime gameTime)
@@ -44,7 +58,9 @@ namespace Spaceship
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            _spriteBatch.Begin();
+            _spriteBatch.Draw(spaceSprite, new Vector2(0, 0), Color.White);
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
