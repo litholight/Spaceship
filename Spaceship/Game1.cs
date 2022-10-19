@@ -16,7 +16,7 @@ namespace Spaceship
         SpriteFont timerFont;
 
         Ship player = new Ship();
-        Asteroid testAsteroid = new Asteroid();
+        Controller gameController = new Controller();
 
         public Game1()
         {
@@ -52,7 +52,12 @@ namespace Spaceship
                 Exit();
 
             player.shipUpdate(gameTime);
-            testAsteroid.asteroidUpdate(gameTime);
+            gameController.conUpdate(gameTime);
+
+            for(int i = 0; i < gameController.asteroids.Count; i++)
+            {
+                gameController.asteroids[i].asteroidUpdate(gameTime);
+            }
 
             base.Update(gameTime);
         }
@@ -64,7 +69,12 @@ namespace Spaceship
             _spriteBatch.Begin();
             _spriteBatch.Draw(spaceSprite, new Vector2(0, 0), Color.White);
             _spriteBatch.Draw(shipSprite, new Vector2(player.position.X - 34, player.position.Y -50), Color.White);
-            _spriteBatch.Draw(asteroidSprite, new Vector2(testAsteroid.position.X - testAsteroid.radius, testAsteroid.position.Y - testAsteroid.radius ), Color.White);
+            
+            for(int i = 0; i < gameController.asteroids.Count; i++)
+            {
+               _spriteBatch.Draw(asteroidSprite, new Vector2(gameController.asteroids[i].position.X - gameController.asteroids[i].radius, gameController.asteroids[i].position.Y - gameController.asteroids[i].radius ), Color.White);
+            }
+           
             _spriteBatch.End();
 
             base.Draw(gameTime);
