@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -51,12 +52,23 @@ namespace Spaceship
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            player.shipUpdate(gameTime);
+            if (gameController.inGame)
+            {
+                player.shipUpdate(gameTime);
+            }
             gameController.conUpdate(gameTime);
 
             for(int i = 0; i < gameController.asteroids.Count; i++)
             {
                 gameController.asteroids[i].asteroidUpdate(gameTime);
+
+                int sumOfRadii = gameController.asteroids[i].radius + player.radius;
+                if (Vector2.Distance(gameController.asteroids[i].position, player.position) < sumOfRadii)
+                {
+                    gameController.inGame = false;
+                    player.position = Ship.defaultPosition;
+                    gameController.asteroids.Clear();
+                }
             }
 
             base.Update(gameTime);
@@ -73,7 +85,18 @@ namespace Spaceship
             for(int i = 0; i < gameController.asteroids.Count; i++)
             {
                _spriteBatch.Draw(asteroidSprite, new Vector2(gameController.asteroids[i].position.X - gameController.asteroids[i].radius, gameController.asteroids[i].position.Y - gameController.asteroids[i].radius ), Color.White);
+
             }
+
+            if(gameController.inGame == false)
+            {
+                string menuMessage = "Press Enter to Begin!";
+                Vector2 sizeOfText = gameFont.MeasureString(menuMessage);
+                int halfWidth = _graphics.PreferredBackBufferWidth / 2;
+                _spriteBatch.DrawString(gameFont, menuMessage, new Vector2(halfWidth - sizeOfText.X / 2, 150), Color.White);
+            }
+
+            _spriteBatch.DrawString(timerFont, "Time: " + Math.Floor(gameController.totalTime).ToString(), new Vector2(3, 3), Color.White);
            
             _spriteBatch.End();
 
